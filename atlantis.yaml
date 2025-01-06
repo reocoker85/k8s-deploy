@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: atlantis
+  namespace: atlantis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: atlantis
+  template:
+    metadata:
+      labels:
+        app: atlantis
+    spec:
+      containers:
+      - name: atlantis
+        image: runatlantis/atlantis:latest
+        args:
+          - server
+          - --gh-user=atlantis
+          - --gh-token=
+          - --repo-allowlist=github.com/reocoker85/terraform-diplom
+---
+piVersion: v1
+kind: Service
+metadata:
+  name: atlantis-service
+  namespace: atlantis
+spec:
+  type: NodePort
+  selector:
+    app: atlantis
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 4141
+    nodePort: 31500
+...
